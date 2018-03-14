@@ -34,7 +34,7 @@ pipeline {
                                                       success {
                                                               echo 'Deployment was successful'
                                                       }
-                                                      failuer {
+                                                      failure {
                                                               echo 'Deployment failed'
                                                       }
                                                 }
