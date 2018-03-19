@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    parameters {
+         string(name: 'Test_Node', defaultValue: '18.219.24.71', description: 'Test Server')
+         string(name: 'Prod_Node', defaultValue: '18.219.217.112', description: 'Production Server')
+    }
+
+    triggers {
+         pollSCM('* * * * *') // Polling Source Control
+     }
+     tools {
+            maven 'MAVEN3.5.3'
+     }
+
+stages{
+        stage('Build'){
+            steps {
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
+            }
+        }
+
+        stage ('Deployments'){
+            parallel{
+                stage ('Deploy to Staging'){
+                    steps {
+                        sh "scp -i /Users/sbeniwal/Tech-Tools/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Test_Node}:/opt/apache-tomcat-8.5.29/webapps"
+                    }
+                }
+
+                stage ("Deploy to Production"){
+                    steps {
+                        sh "scp -i /Users/sbeniwal/Tech-Tools/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Prod_Node}:/opt/apache-tomcat-8.5.29/webapps"
+                    }
+                }
+            }
+        }
+    }
+}
