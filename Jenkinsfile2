@@ -30,13 +30,13 @@ stages{
             parallel{
                 stage ('Deploy to Staging'){
                     steps {
-                        sh "scp -i /Users/sbeniwal/Tech-Tools/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Test_Node}:/opt/apache-tomcat-8.5.29/webapps"
+                        sh "scp -i /Users/Shared/Jenkins/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Test_Node}:/opt/apache-tomcat-8.5.29/webapps"
                     }
                 }
 
                 stage ("Deploy to Production"){
                     steps {
-                        sh "scp -i /Users/sbeniwal/Tech-Tools/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Prod_Node}:/opt/apache-tomcat-8.5.29/webapps"
+                        sh "scp -i /Users/Shared/Jenkins/Sundeep_AWS_Key.pem **/target/*.war ec2-user@${params.Prod_Node}:/opt/apache-tomcat-8.5.29/webapps"
                     }
                 }
             }
